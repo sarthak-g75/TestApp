@@ -1,0 +1,18 @@
+const express = require('express')
+const app = express()
+const connectTOMongo = require('./db')
+const cors = require('cors')
+app.use(cors())
+connectTOMongo()
+app.use((req, res, next) => {
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
+  next()
+})
+app.use(express.json())
+const path = require('path')
+app.use('/static', express.static(path.join(__dirname, 'uploads')))
+app.use('/api/auth', require('./routes/auth'))
+app.use('/api/employee', require('./routes/employee'))
+app.listen(5000, () => {
+  console.log(' app listening on port http://localhost:5000')
+})
